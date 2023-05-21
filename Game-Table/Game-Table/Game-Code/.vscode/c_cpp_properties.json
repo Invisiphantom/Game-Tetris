@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Win32_MSVC",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/header/**",
+                "${workspaceFolder}/resource/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++23",
+            "windowsSdkVersion": "10.0.22000.0",
+            "compilerPath": "cl.exe",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
