@@ -1,5 +1,5 @@
 # Game-Tetris
-## References Material
+## Reference Material
 [SDL2教程【一】环境搭建 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/604292617)
  
 [SDL2教程【二】第一个程序 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/604615788)
