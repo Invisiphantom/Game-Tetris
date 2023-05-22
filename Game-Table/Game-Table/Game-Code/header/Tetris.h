@@ -3,7 +3,6 @@
 #include <Windows.h>
 
 #include <random>
-#include <string>
 
 #include "GameMechanic.h"
 #include "SDL.h"
@@ -58,11 +57,11 @@ static const int TetrisList[BT_NUM][BS_NUM][4][4] = {
 
 class Block {
    public:
-	int containRow;
-	int containCol;
+	int containRow = 3;
+	int containCol = 4;
 
-	BlockType type;
-	BlockState state;
+	BlockType type = BT_O;
+	BlockState state = BS_W;
 
    public:
 	void initRandBlock() {
@@ -76,7 +75,7 @@ class Block {
 };
 
 class Tetris : public GameMechanic {
-	enum TetrisState { TS_MENU = 0, TS_INIT, TS_RUN, TS_PAUSE, TS_DEAD };
+	enum TetrisState { TS_MENU = 0, TS_INIT, TS_RUN, TS_PAUSE, TS_DEAD, TS_NUM };
 
    private:
 	HINSTANCE hInst = 0;
@@ -99,7 +98,7 @@ class Tetris : public GameMechanic {
 	Mix_Chunk* gDrop = nullptr;
 
 	bool Container[CONTAINER_HEIGHT][CONTAINER_WIDTH];
-	TetrisState GameState;
+	TetrisState GameState = TS_MENU;
 	Block LoadingBlock;
 	Block CurrentBlock;
 	Block UnderDropBlock;
@@ -118,9 +117,9 @@ class Tetris : public GameMechanic {
 
 	void playTetris();
 	void quitTetris();
-	void adjustMenuLevel(int _num);
 	void toggleRunPause();
-	bool hitBlock(const Block& _block);
+	void adjustMenuLevel(int _num);
+	bool hitBlock(const Block& _block) const;
 	void moveLeftBlock();
 	void moveRightBlock();
 	void moveDownBlock();
@@ -130,9 +129,10 @@ class Tetris : public GameMechanic {
 	void mergeBlock();
 	void eraseLines();
 
-	void renderBlock(Block _block, int _alpha);
-	int renderBlocktoXY(int _Winy, Block _block, int _alpha);
-	int renderTextNum(int _y, const char* _text, int _num);
+	void transHextoContainer(int _containRow, unsigned short _Hex);
+	void renderBlock(const Block& _block, const int _alpha) const;
+	int renderBlocktoXY(int _Winy, const Block& _block, int _alpha) const;
+	int renderTextNum(const int _y, const char* _text, const int _num) const;
 
    public:
 	explicit Tetris(HINSTANCE _hInst, SDL_Window* _pWin,
@@ -142,13 +142,15 @@ class Tetris : public GameMechanic {
 		  pRenderer(_pRenderer),
 		  GameState(TS_MENU) {}
 	~Tetris() {}
+	Tetris(const Tetris&) = delete;
+	Tetris(const Tetris&&) = delete;
+	Tetris& operator&=(const Tetris&) = delete;
+	Tetris& operator&=(const Tetris&&) = delete;
 
 	void loadResources();
 	void unloadResources();
 
-	void processGameEvent(SDL_Event _evt);
-	void updateGame(float ms);
-	void renderGame();
-
-	void BinarytoPixel(int _containRow, unsigned short _Hex);
+	void processGameEvent(const SDL_Event _evt);
+	void updateGame(const float ms);
+	void renderGame() const;
 };

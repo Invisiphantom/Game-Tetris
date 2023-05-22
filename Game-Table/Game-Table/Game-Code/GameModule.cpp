@@ -8,7 +8,7 @@ void GameModule::initGameModules() {
 	res = Mix_Init(MIX_INIT_MID | MIX_INIT_MP3);
 	res = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT,
 						MIX_DEFAULT_CHANNELS, 2048);
-	pWin = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED,
+	pWin = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED,
 							SDL_WINDOWPOS_CENTERED, winSize.cx, winSize.cy, 0);
 	pRenderer = SDL_CreateRenderer(pWin, -1, SDL_RENDERER_ACCELERATED);
 }
@@ -25,13 +25,12 @@ void GameModule::uninitGameModules() {
 	SDL_Quit();
 }
 
-void GameModule::runGame() {
-	int fps = DEFAULT_FPS;
+void GameModule::runGame() const{
 	int quit = 0;
 	SDL_Event evt;
 
 	Uint64 nFrequency, nPrevCounter, nCurrCounter, nElapsedCounter;
-	float elapsed = 0.0f, lag = 0.0f, frameMS = 1000.0f / fps;
+	float elapsed = 0.0f, lag = 0.0f, frameMS = 1000.0f / FPS;
 
 	nFrequency = SDL_GetPerformanceFrequency();
 	nPrevCounter = SDL_GetPerformanceCounter();
@@ -41,7 +40,7 @@ void GameModule::runGame() {
 			if (evt.type == SDL_QUIT)
 				quit = 1;
 			else
-				gMechanic->processGameEvent(evt);
+				gameMechanic->processGameEvent(evt);
 		else {
 			nCurrCounter = SDL_GetPerformanceCounter();
 			nElapsedCounter = nCurrCounter - nPrevCounter;
@@ -51,14 +50,14 @@ void GameModule::runGame() {
 			lag += elapsed;
 
 			while (lag >= frameMS) {
-				gMechanic->updateGame(frameMS);
+				gameMechanic->updateGame(frameMS);
 				lag -= frameMS;
 			}
 
 			SDL_SetRenderDrawColor(pRenderer, 25, 25, 100, 255);
 			SDL_RenderClear(pRenderer);
 
-			gMechanic->renderGame();
+			gameMechanic->renderGame();
 
 			SDL_RenderPresent(pRenderer);
 		}

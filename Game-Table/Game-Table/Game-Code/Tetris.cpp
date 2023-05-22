@@ -1,6 +1,6 @@
 #include "Tetris.h"
 
-void Tetris::processGameEvent(SDL_Event _evt) {
+void Tetris::processGameEvent(const SDL_Event _evt) {
 	if (_evt.type == SDL_KEYDOWN) {
 		if (_evt.key.keysym.sym == SDLK_LEFT) {
 			if (GameState == TS_RUN) {
@@ -42,24 +42,24 @@ void Tetris::processGameEvent(SDL_Event _evt) {
 		}
 	}
 }
-void Tetris::BinarytoPixel(int _containRow, unsigned short _Binary) {
+void Tetris::transHextoContainer(int _containRow, unsigned short _Binary) {
 	for (int containCol = 0; containCol <= 11; containCol++) {
 		bool bit = (_Binary >> containCol) & 0x0001;
 		Container[_containRow][containCol] = bit;
 	}
 }
 
-void Tetris::updateGame(float ms) {
+void Tetris::updateGame(const float ms) {
 	if (GameState != TS_PAUSE) tick += ms;
 	if (GameState == TS_MENU) {
 		memset(Container, 0, sizeof(Container));
 
-		BinarytoPixel(4, 0x0000);
-		BinarytoPixel(5, 0x07DE);
-		BinarytoPixel(6, 0x0102);
-		BinarytoPixel(7, 0x011E);
-		BinarytoPixel(8, 0x0102);
-		BinarytoPixel(9, 0x011E);
+		transHextoContainer(4, 0x0000);
+		transHextoContainer(5, 0x07DE);
+		transHextoContainer(6, 0x0102);
+		transHextoContainer(7, 0x011E);
+		transHextoContainer(8, 0x0102);
+		transHextoContainer(9, 0x011E);
 
 		static unsigned short menuFrames[][8] = {
 			{0x0010, 0x0018, 0x0010, 0x0000, 0x0000, 0x0002, 0x0766, 0x076E},
@@ -78,7 +78,7 @@ void Tetris::updateGame(float ms) {
 			{0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x00D2}};
 
 		for (int row = 0; row < 8; row++)
-			BinarytoPixel(10 + row, menuFrames[menuFrameIndex][row]);
+			transHextoContainer(10 + row, menuFrames[menuFrameIndex][row]);
 		while (tick >= 500) {
 			menuFrameIndex = (menuFrameIndex + 1) % 13;
 			tick -= 500;
@@ -98,7 +98,7 @@ void Tetris::updateGame(float ms) {
 		};
 
 		for (int row = 0; row < 5; row++)
-			BinarytoPixel(19 + row, menuLevel[level][row]);
+			transHextoContainer(19 + row, menuLevel[level][row]);
 
 	} else if (GameState == TS_INIT) {
 		for (int containRow = 0; containRow <= 24; containRow++) {
@@ -238,7 +238,7 @@ void Tetris::mergeBlock() {
 				Container[containRow][containCol] = 1;
 		}
 }
-bool Tetris::hitBlock(const Block& _block) {
+bool Tetris::hitBlock(const Block& _block) const {
 	auto blockBits = TetrisList[_block.type][_block.state];
 	for (int blockRow = 0, containRow = _block.containRow;
 		 blockRow < BLOCK_HEIGHT; blockRow++, containRow++)
@@ -299,7 +299,7 @@ SDL_Rect* getTileRect(TileType type) {
 	return &rt[type];
 }
 
-void Tetris::renderGame() {
+void Tetris::renderGame() const {
 	SDL_Rect rtDst = {0, 0, TETRIS_WINDOW_WIDTH, TETRIS_WINDOW_HEIGHT};
 	SDL_RenderCopy(pRenderer, gTexture, getTileRect(TT_NONE), &rtDst);
 
@@ -338,7 +338,7 @@ void Tetris::renderGame() {
 	Win_y = renderTextNum(Win_y + 8, "Level", level);
 }
 
-void Tetris::renderBlock(Block _block, int _alpha) {
+void Tetris::renderBlock(const Block& _block, const int _alpha) const {
 	SDL_Rect rt = {0, 0, BLOCK_IMAGE_WIDTH, BLOCK_IMAGE_HEIGHT};
 
 	for (int blockRow = 0; blockRow <= 3; blockRow++) {
@@ -358,7 +358,8 @@ void Tetris::renderBlock(Block _block, int _alpha) {
 		}
 	}
 }
-int Tetris::renderBlocktoXY(int _Winy, Block _block, int _alpha) {
+int Tetris::renderBlocktoXY(int _Winy, const Block& _block,
+							int _alpha) const {
 	SDL_Rect rt = {0, 0, BLOCK_IMAGE_WIDTH, BLOCK_IMAGE_HEIGHT};
 
 	for (int blockRow = 0; blockRow <= 3; blockRow++) {
@@ -377,7 +378,8 @@ int Tetris::renderBlocktoXY(int _Winy, Block _block, int _alpha) {
 	return _Winy + BLOCK_IMAGE_HEIGHT * 4;
 }
 
-int Tetris::renderTextNum(int _y, const char* _text, int _num) {
+int Tetris::renderTextNum(const int _y, const char* _text,
+						  const int _num) const {
 	SDL_Rect dst{0, 0, 0, 0};
 	TTF_SizeText(gTextFont, _text, &dst.w, &dst.h);
 	dst.y = _y;

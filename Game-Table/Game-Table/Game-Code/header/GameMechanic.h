@@ -4,7 +4,7 @@ class GameMechanic {
    public:
 	GameMechanic() {}
 	~GameMechanic() {}
-	virtual void processGameEvent(SDL_Event _evt){}
-	virtual void updateGame(float _ms){}
-	virtual void renderGame(){}
+	virtual void processGameEvent(const SDL_Event _evt) = 0;
+	virtual void updateGame(const float _ms) = 0;
+	virtual void renderGame() const = 0;
 };
