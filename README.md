@@ -11,3 +11,6 @@
 [SDL2 游戏开发最小知识栈 - 没事造轮子 (meishizaolunzi.com)](https://meishizaolunzi.com/sdl2-you-xi-kai-fa-zui-xiao-zhi-shi-zhan/)
  
 [俄罗斯方块 - 没事造轮子 (meishizaolunzi.com)](https://meishizaolunzi.com/cyu-yan-xiao-you-xi-zhi-e-luo-si-fang-kuai/)
+ 
+[El-Tetris – An Improvement on Pierre Dellacherie’s Algorithm | imake](https://imake.ninja/el-tetris-an-improvement-on-pierre-dellacheries-algorithm/)
+
