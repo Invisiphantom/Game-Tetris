@@ -43,5 +43,8 @@
     <ClCompile Include="Game-Code\Tetris.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Game-Code\TetrisAI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

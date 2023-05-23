@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 
+#include <cfloat>
 #include <random>
 
 #include "GameMechanic.h"
@@ -25,7 +26,7 @@
 
 enum BlockType { BT_O = 0, BT_I, BT_S, BT_Z, BT_L, BT_J, BT_T, BT_NUM };
 enum BlockState { BS_W = 0, BS_A, BS_S, BS_D, BS_NUM };
-static const int TetrisList[BT_NUM][BS_NUM][4][4] = {
+static const bool TetrisList[BT_NUM][BS_NUM][4][4] = {
 	{{{0, 0, 0, 0}, {0, 1, 1, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}},
 	 {{0, 0, 0, 0}, {0, 1, 1, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}},
 	 {{0, 0, 0, 0}, {0, 1, 1, 0}, {0, 1, 1, 0}, {0, 0, 0, 0}},
@@ -54,6 +55,12 @@ static const int TetrisList[BT_NUM][BS_NUM][4][4] = {
 	 {{0, 0, 1, 0}, {0, 0, 1, 1}, {0, 0, 1, 0}, {0, 0, 0, 0}},
 	 {{0, 0, 1, 0}, {0, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}},
 	 {{0, 0, 1, 0}, {0, 1, 1, 0}, {0, 0, 1, 0}, {0, 0, 0, 0}}}};
+static const int TetrisBottomPos[BT_NUM][BS_NUM] = {
+	{2, 2, 2, 2}, {1, 3, 1, 3}, {2, 2, 2, 2}, {2, 2, 2, 2},
+	{2, 2, 1, 2}, {2, 2, 1, 2}, {2, 2, 1, 2}};
+static const int TetrisHeight[BT_NUM][BS_NUM] = {
+	{2, 2, 2, 2}, {1, 4, 1, 4}, {2, 3, 2, 3}, {2, 3, 2, 3},
+	{2, 3, 2, 3}, {2, 3, 2, 3}, {2, 3, 2, 3}};
 
 class Block {
    public:
@@ -69,13 +76,21 @@ class Block {
 		std::mt19937 gen(rd());
 		containRow = 3;
 		containCol = 4;
-		type = (BlockType)(gen() % BT_NUM);
-		state = (BlockState)(gen() % BS_NUM);
+		type = static_cast<BlockType>(gen() % BT_NUM);
+		state = static_cast<BlockState>(gen() % BS_NUM);
 	}
 };
 
 class Tetris : public GameMechanic {
-	enum TetrisState { TS_MENU = 0, TS_INIT, TS_RUN, TS_PAUSE, TS_DEAD, TS_NUM };
+	enum TetrisState {
+		TS_MENU = 0,
+		TS_INIT,
+		TS_RUN,
+		TS_AI,
+		TS_PAUSE,
+		TS_DEAD,
+		TS_NUM
+	};
 
    private:
 	HINSTANCE hInst = 0;
@@ -98,10 +113,12 @@ class Tetris : public GameMechanic {
 	Mix_Chunk* gDrop = nullptr;
 
 	bool Container[CONTAINER_HEIGHT][CONTAINER_WIDTH];
+	bool AITestContainer[CONTAINER_HEIGHT][CONTAINER_WIDTH];
 	TetrisState GameState = TS_MENU;
 	Block LoadingBlock;
 	Block CurrentBlock;
 	Block UnderDropBlock;
+	Block AIBlock;
 	int menuFrameIndex = 0;
 	int deadFrameIndex = 0;
 	bool deadFrameDown;
@@ -118,6 +135,7 @@ class Tetris : public GameMechanic {
 	void playTetris();
 	void quitTetris();
 	void toggleRunPause();
+	void toggleAIMod();
 	void adjustMenuLevel(int _num);
 	bool hitBlock(const Block& _block) const;
 	void moveLeftBlock();
@@ -128,6 +146,16 @@ class Tetris : public GameMechanic {
 	void rotateBlock();
 	void mergeBlock();
 	void eraseLines();
+
+	void initAIRecommendBlock();
+	double evaluateScore(const Block& _block);
+	void initAIMergeContainer(const Block& _block);
+	double getLandingHeight(const Block& _block) const;
+	int getEliminateRows() const;
+	int getRowTransitions() const;
+	int getColumnTransitions() const;
+	int getNumberOfHoles() const;
+	int getWellSums() const;
 
 	void transHextoContainer(int _containRow, unsigned short _Hex);
 	void renderBlock(const Block& _block, const int _alpha) const;

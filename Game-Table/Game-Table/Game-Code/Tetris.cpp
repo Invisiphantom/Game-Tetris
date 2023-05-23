@@ -14,7 +14,7 @@ void Tetris::processGameEvent(const SDL_Event _evt) {
 			if (GameState == TS_MENU) {
 				adjustMenuLevel(1);
 			}
-			if (GameState == TS_RUN) {
+			if (GameState == TS_RUN ) {
 				rotateBlock();
 			}
 		} else if (_evt.key.keysym.sym == SDLK_DOWN) {
@@ -31,12 +31,19 @@ void Tetris::processGameEvent(const SDL_Event _evt) {
 			if (GameState == TS_RUN) {
 				dropBlock();
 			}
+		} else if (_evt.key.keysym.sym == SDLK_RETURN) {
+			if (GameState == TS_MENU) {
+				playTetris();
+			}
+			if (GameState == TS_RUN || GameState == TS_AI) {
+				toggleAIMod();
+			}
 		} else if (_evt.key.keysym.sym == SDLK_p) {
-			if (GameState == TS_RUN || GameState == TS_PAUSE) {
+			if (GameState == TS_RUN || GameState == TS_PAUSE|| GameState == TS_AI) {
 				toggleRunPause();
 			}
 		} else if (_evt.key.keysym.sym == SDLK_q) {
-			if (GameState == TS_RUN || GameState == TS_PAUSE) {
+			if (GameState == TS_RUN || GameState == TS_PAUSE|| GameState == TS_AI) {
 				quitTetris();
 			}
 		}
@@ -111,6 +118,7 @@ void Tetris::updateGame(const float ms) {
 
 		CurrentBlock.initRandBlock();
 		LoadingBlock.initRandBlock();
+
 		speed = 800;
 		tick = 0.0f;
 		GameState = TS_RUN;
@@ -131,6 +139,29 @@ void Tetris::updateGame(const float ms) {
 		for (int containCol = 1; containCol <= 10; containCol++)
 			if (Container[3][containCol] == 1) {
 				tick = 0.0f;
+				score = 0;
+				deadFrameIndex = 4;
+				deadFrameDown = 1;
+				deadFrameUp = 0;
+				GameState = TS_DEAD;
+			}
+	} else if (GameState == TS_AI) {
+		initAIRecommendBlock();
+		CurrentBlock = AIBlock;
+
+		while (tick >= speed) {
+			moveDownBlock();
+			tick -= speed;
+		}
+
+		if (score > hiScore) hiScore = score;
+
+		speed = 10;
+
+		for (int containCol = 1; containCol <= 10; containCol++)
+			if (Container[3][containCol] == 1) {
+				tick = 0.0f;
+				score = 0;
 				deadFrameIndex = 4;
 				deadFrameDown = 1;
 				deadFrameUp = 0;
@@ -174,9 +205,15 @@ void Tetris::adjustMenuLevel(int _num) {
 		level = 0;
 }
 void Tetris::toggleRunPause() {
-	if (GameState == TS_RUN)
+	if (GameState == TS_RUN || TS_AI)
 		GameState = TS_PAUSE;
 	else if (GameState == TS_PAUSE)
+		GameState = TS_RUN;
+}
+void Tetris::toggleAIMod() {
+	if (GameState == TS_RUN)
+		GameState = TS_AI;
+	else if (GameState == TS_AI)
 		GameState = TS_RUN;
 }
 void Tetris::moveLeftBlock() {
@@ -223,9 +260,10 @@ void Tetris::initUnderDropBlock() {
 
 void Tetris::rotateBlock() {
 	Block nextBlock = CurrentBlock;
-	nextBlock.state = BlockState((nextBlock.state + 1) % BS_NUM);
+	nextBlock.state = static_cast<BlockState>((nextBlock.state + 1) % TS_NUM);
 	if (hitBlock(nextBlock) == false)
-		CurrentBlock.state = BlockState((CurrentBlock.state + 1) % BS_NUM);
+		CurrentBlock.state =
+			static_cast<BlockState>((CurrentBlock.state + 1) % TS_NUM);
 }
 
 void Tetris::mergeBlock() {
@@ -325,9 +363,10 @@ void Tetris::renderGame() const {
 		SDL_RenderCopy(pRenderer, gTexture, &rtLineSrc, &rtLineDst);
 	}
 
-	if (GameState == TS_RUN || GameState == TS_PAUSE) {
+	if (GameState == TS_RUN || GameState == TS_PAUSE || GameState == TS_AI) {
 		renderBlock(CurrentBlock, 255);
-		renderBlock(UnderDropBlock, 80);
+		if (GameState == TS_RUN || GameState == TS_PAUSE)
+			renderBlock(UnderDropBlock, 80);
 	}
 
 	int Win_y;
@@ -336,6 +375,7 @@ void Tetris::renderGame() const {
 	Win_y = renderTextNum(Win_y + 6, "Next", -1);
 	Win_y = renderBlocktoXY(Win_y + 30, LoadingBlock, 255);
 	Win_y = renderTextNum(Win_y + 8, "Level", level);
+	if (GameState == TS_AI) Win_y = renderTextNum(Win_y + 20, "AI-Mod", -1);
 }
 
 void Tetris::renderBlock(const Block& _block, const int _alpha) const {
@@ -358,8 +398,7 @@ void Tetris::renderBlock(const Block& _block, const int _alpha) const {
 		}
 	}
 }
-int Tetris::renderBlocktoXY(int _Winy, const Block& _block,
-							int _alpha) const {
+int Tetris::renderBlocktoXY(int _Winy, const Block& _block, int _alpha) const {
 	SDL_Rect rt = {0, 0, BLOCK_IMAGE_WIDTH, BLOCK_IMAGE_HEIGHT};
 
 	for (int blockRow = 0; blockRow <= 3; blockRow++) {
