@@ -30,8 +30,10 @@
   <ItemGroup>
     <ClCompile Include="Game-Code\GameModule.cpp" />
     <ClCompile Include="Game-Code\main.cpp" />
-    <ClCompile Include="Game-Code\Tetris.cpp" />
-    <ClCompile Include="Game-Code\TetrisAI.cpp" />
+    <ClCompile Include="Game-Code\Tetris-AI.cpp" />
+    <ClCompile Include="Game-Code\Tetris-Interface.cpp" />
+    <ClCompile Include="Game-Code\Tetris-Logic.cpp" />
+    <ClCompile Include="Game-Code\Tetris-Render.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

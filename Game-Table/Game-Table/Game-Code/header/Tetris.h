@@ -19,7 +19,7 @@
 #define BLOCK_IMAGE_HEIGHT 38
 
 #define CONTAINER_WIDTH (1 + 10 + 1)
-#define CONTAINER_HEIGHT (4 + 20 + 1)
+#define CONTAINER_HEIGHT (BLOCK_HEIGHT + 20 + 1)
 
 #define TETRIS_WINDOW_WIDTH ((CONTAINER_WIDTH + 3) * BLOCK_IMAGE_WIDTH)
 #define TETRIS_WINDOW_HEIGHT ((CONTAINER_HEIGHT - 5) * BLOCK_IMAGE_HEIGHT)
@@ -66,9 +66,8 @@ class Block {
    public:
 	int containRow = 3;
 	int containCol = 4;
-
-	BlockType type = BT_O;
-	BlockState state = BS_W;
+	BlockType type = static_cast<BlockType>(0);
+	BlockState state = static_cast<BlockState>(0);
 
    public:
 	void initRandBlock() {
@@ -130,13 +129,15 @@ class Tetris : public GameMechanic {
 	int hiScore = 0;
 
    private:
-	SDL_RWops* importResourceData(HINSTANCE, LPCWSTR, LPCWSTR);
 
+	/* Tetris-Interface.cpp */
 	void playTetris();
 	void quitTetris();
 	void toggleRunPause();
 	void toggleAIMod();
 	void adjustMenuLevel(int _num);
+
+	/* Tetris-Logic.cpp */
 	bool hitBlock(const Block& _block) const;
 	void moveLeftBlock();
 	void moveRightBlock();
@@ -147,6 +148,7 @@ class Tetris : public GameMechanic {
 	void mergeBlock();
 	void eraseLines();
 
+	/* Tetris-AI.cpp */
 	void initAIRecommendBlock();
 	double evaluateScore(const Block& _block);
 	void initAIMergeContainer(const Block& _block);
@@ -157,6 +159,8 @@ class Tetris : public GameMechanic {
 	int getNumberOfHoles() const;
 	int getWellSums() const;
 
+	/* Tetris-Render.cpp */
+	SDL_RWops* importResourceData(HINSTANCE, LPCWSTR, LPCWSTR);
 	void transHextoContainer(int _containRow, unsigned short _Hex);
 	void renderBlock(const Block& _block, const int _alpha) const;
 	int renderBlocktoXY(int _Winy, const Block& _block, int _alpha) const;
@@ -175,9 +179,11 @@ class Tetris : public GameMechanic {
 	Tetris& operator&=(const Tetris&) = delete;
 	Tetris& operator&=(const Tetris&&) = delete;
 
+	/* resource.h */
 	void loadResources();
 	void unloadResources();
 
+	/* GameMechanic.h */
 	void processGameEvent(const SDL_Event _evt);
 	void updateGame(const float ms);
 	void renderGame() const;

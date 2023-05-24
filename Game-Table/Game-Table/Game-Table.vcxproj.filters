@@ -40,10 +40,16 @@
     <ClCompile Include="Game-Code\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Game-Code\Tetris.cpp">
+    <ClCompile Include="Game-Code\Tetris-Logic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Game-Code\TetrisAI.cpp">
+    <ClCompile Include="Game-Code\Tetris-Render.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game-Code\Tetris-AI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Game-Code\Tetris-Interface.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
