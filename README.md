@@ -145,7 +145,7 @@ class GameMechanic {
 };
 ```
 ## 游戏逻辑实现（Tetris.h）：
-enum TetrisState 共6钟游戏状态：菜单界面、初始化俄罗斯方块、运行俄罗斯方块、开启AI自动模式、暂停游戏、游戏失败结束
+enum TetrisState 共6种游戏状态：菜单界面、初始化俄罗斯方块、运行俄罗斯方块、开启AI自动模式、暂停游戏、游戏失败结束
 - Tetris-Interface.cpp 负责根据键鼠交互事件切换游戏界面
 - Tetris-Logic.cpp 负责游戏逻辑的实现(例如：方块的碰撞检测、旋转移动、固定触底的方块、消去满行)
 - Tetris-AI.cpp 负责游戏AI计算与评分机制的实现(采用[EI-Tetris算法](https://imake.ninja/el-tetris-an-improvement-on-pierre-dellacheries-algorithm/))
@@ -269,7 +269,7 @@ class Tetris : public GameMechanic {
 - GM.initGameModules() 初始化游戏环境
 - Tetris T() 实例化类Tetris并传入所需参数(窗口句柄、窗口指针、渲染器指针)
 - T.loadResources() 加载游戏资源至内存，并将其地址赋值到类Tetris中对应的资源指针
-- GM.embedGameMechanic(T) 将派生类Tetris地址赋给GameMoudle中的基类指针gameMechanic，将上层的Tetris游戏状态机嵌入到GameModule搭建好的游戏环境钟
+- GM.embedGameMechanic(T) 将派生类Tetris地址赋给GameMoudle中的基类指针gameMechanic，将上层的Tetris游戏状态机嵌入到GameModule搭建好的游戏环境中
 - GM.runGame() 启动游戏循环
 - T.unloadResources() 释放加载至内存的游戏资源
 - GM.uninitGameModules() 释放原来加载的SDL游戏组件
