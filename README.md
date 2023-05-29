@@ -11,14 +11,14 @@
 
 # 代码结构
 ## 总体结构简介
-- 类GameModule负责调用SDL组件库初始化游戏环境，以及创建游戏循环，调用游戏机制类GameMechanic提供的三个游戏接口来实现游戏的交互、更新和渲染
+- 类GameModule负责调用SDL组件库初始化游戏环境，创建游戏循环，以及调用游戏机制类GameMechanic提供的三个游戏接口来实现游戏的交互、更新和渲染
 - 抽象类GameMechanic负责充当底层游戏环境与上层游戏状态机的层间接口
 - 类Tetris继承自抽象类GameMechanic，负责实现俄罗斯方块的具体游戏机制
-- 类Block负责实例化各种类型的方块，辅助类Tetris的实现
+- 类Block负责实例化各种类型的方块，辅助类Tetris的功能实现
 
 
 ## 游戏基础组件（GameModule.h）：
-类GameModule负责调用SDL组件库初始化游戏环境，创建游戏循环，以及通过调用抽象类GameMechanic公开的三个接口函数，间接实现游戏状态机的**键鼠事件交互**、**更新游戏状态**以及**渲染游戏图像**
+类GameModule负责调用SDL组件库初始化游戏环境，创建游戏循环，以及通过调用抽象类GameMechanic公开的三个接口成员函数，间接实现对游戏状态机的**键鼠事件交互**、**游戏状态更新**以及**游戏图像渲染**。
 ```cpp
 class GameModule {
    private:
@@ -72,7 +72,7 @@ void GameModule::initGameModules() {
 	pRenderer = SDL_CreateRenderer(pWin, -1, SDL_RENDERER_ACCELERATED);
 }
 ```
-- uninitGameModules() 负责释放initGameModules()调用的资源
+- uninitGameModules() 负责在窗口关闭后释放initGameModules()调用的资源
 ```cpp
 void GameModule::uninitGameModules() {
 	SDL_DestroyRenderer(pRenderer);
@@ -87,7 +87,7 @@ void GameModule::uninitGameModules() {
 }
 ```
 
-- runGame() 负责通过FPS创建游戏循环，通过抽象类GameMechanic暴露的三个层间接口间接实现**键鼠事件交互**、**更新游戏状态**以及**渲染游戏图像**
+- runGame() 负责依据游戏帧率FPS来创建定时游戏循环，在循环中通过不断调用抽象类GameMechanic暴露的三个层间接口间接来实现**键鼠事件交互**、**游戏状态更新**以及**游戏图像渲染**
 ```cpp
 
 void GameModule::runGame() const{
@@ -130,7 +130,7 @@ void GameModule::runGame() const{
 }
 ```
 ## 游戏机制接口（GameMechanic.h）：
-由上述可知，所有从GameMechanic派生出的游戏类都需要重新实现三个层间接口成员函数，以供GameModule调用。以下是三个层间接口成员函数：
+由上述可知，所有从GameMechanic派生出的游戏类都需要重新实现基类的三个层间接口成员函数，以供GameModule调用。以下是三个层间接口成员函数：
 - processGameEvent() 负责处理键鼠交互事件
 - updateGame() 负责向GameMechanic传入当前游戏时间，并实现游戏状态机的更新
 - renderGame() 负责将之前更新过的游戏状态机渲染到到当前窗口
@@ -146,11 +146,11 @@ class GameMechanic {
 ```
 ## 游戏逻辑实现（Tetris.h）：
 enum TetrisState 共6种游戏状态：菜单界面、初始化俄罗斯方块、运行俄罗斯方块、开启AI自动模式、暂停游戏、游戏失败结束
-- Tetris-Interface.cpp 负责根据键鼠交互事件切换游戏界面
-- Tetris-Logic.cpp 负责游戏逻辑的实现(例如：方块的碰撞检测、旋转移动、固定触底的方块、消去满行)
+- Tetris-Interface.cpp 负责根据从GameModule接受到的键鼠交互事件，切换至所需的游戏状态(例如：从菜单界面进入到游戏进行界面、退出游戏回到菜单、暂停游戏、开启AI模式、调整游戏难度)
+- Tetris-Logic.cpp 负责游戏逻辑的实现(例如：方块的碰撞检测、旋转移动、固定触底方块至背景容器、消去已填满行)
 - Tetris-AI.cpp 负责游戏AI计算与评分机制的实现(采用[EI-Tetris算法](https://imake.ninja/el-tetris-an-improvement-on-pierre-dellacheries-algorithm/))
 - Tetris-Render.cpp 负责游戏资源的渲染(例如：背景渲染、方块渲染、记分板文字与数字渲染)
-- resource.h 负责维护从Game-Table.rc 加载至内存的游戏资源
+- resource.h 负责维护从Game-Table.rc 加载至内存的游戏资源(例如：纹理、字体、背景音乐、游戏音效)
 ```cpp
 class Tetris : public GameMechanic {
 	enum TetrisState {
@@ -266,13 +266,13 @@ class Tetris : public GameMechanic {
 
 ## 游戏程序入口(main.cpp)
 - GameModule GM() 实例化类GameModule并传入所需参数(窗口句柄、窗口命名、窗口宽度、游戏帧率)
-- GM.initGameModules() 初始化游戏环境
+- GM.initGameModules() 初始化游戏组件及窗口环境
 - Tetris T() 实例化类Tetris并传入所需参数(窗口句柄、窗口指针、渲染器指针)
 - T.loadResources() 加载游戏资源至内存，并将其地址赋值到类Tetris中对应的资源指针
-- GM.embedGameMechanic(T) 将派生类Tetris地址赋给GameMoudle中的基类指针gameMechanic，将上层的Tetris游戏状态机嵌入到GameModule搭建好的游戏环境中
-- GM.runGame() 启动游戏循环
+- GM.embedGameMechanic(T) 通过将派生类Tetris地址赋给GameMoudle中的基类指针gameMechanic，使上层的Tetris游戏状态机嵌入到GameModule搭建好的游戏环境中
+- GM.runGame() 启动运行游戏循环
 - T.unloadResources() 释放加载至内存的游戏资源
-- GM.uninitGameModules() 释放原来加载的SDL游戏组件
+- GM.uninitGameModules() 释放加载的窗口指针和渲染器指针以及各项SDL游戏组件
 ```cpp
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 				   _In_ LPSTR lpCmdLine, _In_ int nShowCmd) {
