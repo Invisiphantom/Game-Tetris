@@ -145,9 +145,9 @@ class GameMechanic {
 };
 ```
 ## 游戏逻辑实现（Tetris.h）：
-enum TetrisState 共6种游戏状态：菜单界面、初始化俄罗斯方块、运行俄罗斯方块、开启AI自动模式、暂停游戏、游戏失败结束
+enum TetrisState 定义了共6种游戏状态：菜单界面、初始化俄罗斯方块、运行俄罗斯方块、开启AI自动模式、暂停游戏、游戏失败结束
 - Tetris-Interface.cpp 负责根据从GameModule接受到的键鼠交互事件，切换至所需的游戏状态(例如：从菜单界面进入到游戏进行界面、退出游戏回到菜单、暂停游戏、开启AI模式、调整游戏难度)
-- Tetris-Logic.cpp 负责游戏逻辑的实现(例如：方块的碰撞检测、旋转移动、固定触底方块至背景容器、消去已填满行)
+- Tetris-Logic.cpp 负责游戏逻辑的实现(例如：方块的碰撞检测、旋转移动下落方块、将触底方块固定至背景容器、消去已填满行)
 - Tetris-AI.cpp 负责游戏AI计算与评分机制的实现(采用[EI-Tetris算法](https://imake.ninja/el-tetris-an-improvement-on-pierre-dellacheries-algorithm/))
 - Tetris-Render.cpp 负责游戏资源的渲染(例如：背景渲染、方块渲染、记分板文字与数字渲染)
 - resource.h 负责维护从Game-Table.rc 加载至内存的游戏资源(例如：纹理、字体、背景音乐、游戏音效)
