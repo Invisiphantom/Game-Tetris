@@ -15,6 +15,7 @@
 - 抽象类GameMechanic负责充当底层游戏环境与上层游戏状态机的层间接口
 - 类Tetris继承自抽象类GameMechanic，负责实现俄罗斯方块的具体游戏机制
 - 类Block负责实例化各种类型的方块，辅助类Tetris的功能实现
+! 游戏环境类GameModule并没有直接访问游戏逻辑类Tetris，而是通过基类指针GameMechanic来间接访问，这使该游戏代码框架便于维护且易于复用。
 
 
 ## 游戏基础组件（GameModule.h）：
