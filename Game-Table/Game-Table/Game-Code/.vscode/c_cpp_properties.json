@@ -5,7 +5,11 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/header/**",
-                "${workspaceFolder}/resource/**"
+                "${workspaceFolder}/resource/**",
+                "${workspaceFolder}/../../Dependency/SDL2-2.26.5/include/**",
+                "${workspaceFolder}/../../Dependency/SDL2_ttf-2.20.2/include/**",
+                "${workspaceFolder}/../../Dependency/SDL2_image-2.6.3/include/**",
+                "${workspaceFolder}/../../Dependency/SDL2_mixer-2.6.3/include/**"
             ],
             "defines": [
                 "_DEBUG",

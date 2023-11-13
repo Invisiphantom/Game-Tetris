@@ -1,4 +1,6 @@
-C:\Users\16770\Desktop\Game-Table\Game-Table\Game-Code\GameModule.cpp;C:\Users\16770\Desktop\Game-Table\bin\tmp\x64\Release\GameModule.obj
-C:\Users\16770\Desktop\Game-Table\Game-Table\Game-Code\main.cpp;C:\Users\16770\Desktop\Game-Table\bin\tmp\x64\Release\main.obj
-C:\Users\16770\Desktop\Game-Table\Game-Table\Game-Code\Tetris.cpp;C:\Users\16770\Desktop\Game-Table\bin\tmp\x64\Release\Tetris.obj
-C:\Users\16770\Desktop\Game-Table\Game-Table\Game-Code\TetrisAI.cpp;C:\Users\16770\Desktop\Game-Table\bin\tmp\x64\Release\TetrisAI.obj
+C:\Users\16770\Documents\Game-Tetris\Game-Table\Game-Table\Game-Code\GameModule.cpp;C:\Users\16770\Documents\Game-Tetris\Game-Table\bin\tmp\x64\Release\GameModule.obj
+C:\Users\16770\Documents\Game-Tetris\Game-Table\Game-Table\Game-Code\main.cpp;C:\Users\16770\Documents\Game-Tetris\Game-Table\bin\tmp\x64\Release\main.obj
+C:\Users\16770\Documents\Game-Tetris\Game-Table\Game-Table\Game-Code\Tetris-AI.cpp;C:\Users\16770\Documents\Game-Tetris\Game-Table\bin\tmp\x64\Release\Tetris-AI.obj
+C:\Users\16770\Documents\Game-Tetris\Game-Table\Game-Table\Game-Code\Tetris-Interface.cpp;C:\Users\16770\Documents\Game-Tetris\Game-Table\bin\tmp\x64\Release\Tetris-Interface.obj
+C:\Users\16770\Documents\Game-Tetris\Game-Table\Game-Table\Game-Code\Tetris-Logic.cpp;C:\Users\16770\Documents\Game-Tetris\Game-Table\bin\tmp\x64\Release\Tetris-Logic.obj
+C:\Users\16770\Documents\Game-Tetris\Game-Table\Game-Table\Game-Code\Tetris-Render.cpp;C:\Users\16770\Documents\Game-Tetris\Game-Table\bin\tmp\x64\Release\Tetris-Render.obj
